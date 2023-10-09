@@ -2,9 +2,9 @@
 {
     public class GameEntityTouchHandler
     {
-        public void FindSameEntity(GameEntity.GameEntity gameEntity)
+        public void OnFindSameEntity(GameEntity.GameEntity gameEntity)
         {
-            gameEntity.DestroyEntity();
+            gameEntity.ReclaimEntity();
         }
     }
 }

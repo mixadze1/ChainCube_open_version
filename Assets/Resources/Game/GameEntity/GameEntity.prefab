@@ -1048,6 +1048,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e95273a08e1c948408f14807b055fdba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _rigidbody: {fileID: 1600482143454933948}
   _gameEntityView: {fileID: 2380969772890785196}
 --- !u!65 &2899332506524819037
 BoxCollider:

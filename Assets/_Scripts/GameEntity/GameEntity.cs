@@ -6,18 +6,26 @@ namespace _Scripts.GameEntity
 {
     public class GameEntity : MonoBehaviour
     {
+        [SerializeField] private Rigidbody _rigidbody;
         [SerializeField] private GameEntityView _gameEntityView;
+
+        private float _jumpPower = 7;
+
+        private IGameHandler _gameHandler;
         
         private GameEntityTouchHandler _gameEntityTouchHandler;
+        private Score _score;
 
         public Action OnTouchGameObject;
 
         public int ValueEntity { get; private set; }
 
-        public void Initialize(GameEntityTouchHandler gameEntityTouchHandler, GameEntityModel gameEntityModel, ColorHandler colorHandler,  Vector3 position)
+        public void Initialize(IGameHandler gameHandler, GameEntityTouchHandler gameEntityTouchHandler, int valueEntity, ColorHandler colorHandler,  Vector3 position, Score score)
         {
+            _gameHandler = gameHandler;
+            _score = score;
             _gameEntityTouchHandler = gameEntityTouchHandler;
-            ValueEntity = gameEntityModel.ValueEntity;
+            ValueEntity = valueEntity;
             SetPosition(position);
             InitializeGameEntityView(colorHandler);
         }
@@ -33,8 +41,6 @@ namespace _Scripts.GameEntity
         public void OnCollisionEnter(Collision other)
         {
             var gameEntity = OnTouchGameEntity(other);
-
-       
             
             if(OnTouchWall(other) || gameEntity)
                 OnTouchGameObject?.Invoke();
@@ -46,8 +52,21 @@ namespace _Scripts.GameEntity
             if (gameEntity && IsSameNumberEntities(gameEntity))
             {
                 IncreaseEntityNumber();
-                _gameEntityTouchHandler.FindSameEntity(gameEntity);
+                UpdateScore();
+                JumpEntity();
+                OnFindSameEntity(gameEntity);
             }
+        }
+
+        private void JumpEntity()
+        {
+            Debug.Log("Jump");
+            _rigidbody.velocity = new Vector3(_rigidbody.velocity.x, _jumpPower, _rigidbody.velocity.z);
+        }
+
+        private void OnFindSameEntity(GameEntity gameEntity)
+        {
+            _gameEntityTouchHandler.OnFindSameEntity(gameEntity);
         }
 
         private static GameEntity OnTouchGameEntity(Collision other)
@@ -68,16 +87,21 @@ namespace _Scripts.GameEntity
             UpdateView(ValueEntity);
         }
 
+        private void UpdateScore()
+        {
+            _score.UpdateScore(ValueEntity);
+        }
+
         private void UpdateView(int valueEntity)
         {
             _gameEntityView.UpdateView(valueEntity);
         }
 
-        public void DestroyEntity()
+        public void ReclaimEntity()
         {
             DisableEntity();
             OnTouchGameObject?.Invoke();
-            Destroy(gameObject);
+            _gameHandler.ReclaimGameEntity(this);
         }
 
         private void DisableEntity()

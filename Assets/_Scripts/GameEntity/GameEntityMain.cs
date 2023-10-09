@@ -1,7 +1,8 @@
-﻿using _Scripts.Services.Input;
+﻿using _Scripts.Game;
+using _Scripts.Services.Input;
 using UnityEngine;
 
-namespace _Scripts.Game
+namespace _Scripts.GameEntity
 {
     public class GameEntityMain : MonoBehaviour
     {
@@ -12,15 +13,15 @@ namespace _Scripts.Game
         private IGameHandler _gameHandler;
         private IInputService _inputService;
 
-        private GameEntity.GameEntity _gameEntity;
+        private GameEntity _gameEntity;
         private Transform _parentGameEntity;
 
         private float _speed = 5;
 
         private bool _isExitInput;
-        private float _speedToEntities = 15;
+        private float _speedToEntities = 25;
 
-        public void Initialize(GameEntity.GameEntity gameEntity, Transform parentGameEntity, IInputService inputService, IGameHandler gameHandler)
+        public void Initialize(GameEntity gameEntity, Transform parentGameEntity, IInputService inputService, IGameHandler gameHandler)
         {
             _gameHandler = gameHandler;
             _gameEntity = gameEntity;
@@ -30,11 +31,6 @@ namespace _Scripts.Game
             inputService.OnExitInput += OnExitInput;
             
             FreezeRotationState(true);
-        }
-
-        private void OnEnterInput()
-        {
-         Debug.Log("OnEnterInput");   
         }
 
         private void OnExitInput()
@@ -63,31 +59,41 @@ namespace _Scripts.Game
         private bool IsExitInput() => 
             _isExitInput;
 
-        private void MoveToLeftRight(float horizontal)
-        {
+        private void MoveToLeftRight(float horizontal) => 
             _rigidbody.velocity = new Vector3( _speed * horizontal, 0, 0);
-        }
 
-        private void MoveToEntities()
-        {
+        private void MoveToEntities() => 
             _rigidbody.velocity = new Vector3(0, 0, _speedToEntities);
-        }
 
         private void OnTouchGameEntity()
         {
             if (!IsExitInput())
                 return;
-            
-            this.transform.SetParent(_parentGameEntity);
-            
-            _gameEntity.OnTouchGameObject -= OnTouchGameEntity;
-            _inputService.OnEnterInput -= OnEnterInput;
-            _inputService.OnExitInput -= OnExitInput;
-            
-            _gameHandler.OnUsedMainGameEntity();
+
+            SetCurrentParent();
+            FreezeRotationState(false);
+            UnsubscribeEvents();
+            CreateNewMainGameEntity();
             
             Destroy(this);
             Destroy(_trail.gameObject);
+        }
+
+        private void SetCurrentParent() => 
+            transform.SetParent(_parentGameEntity);
+
+        private void CreateNewMainGameEntity() => 
+            _gameHandler.CreateNewGameEntityAfterUsedPrevious();
+
+        private void UnsubscribeEvents()
+        {
+            _gameEntity.OnTouchGameObject -= OnTouchGameEntity;
+            _inputService.OnExitInput -= OnExitInput;
+        }
+
+        private void OnDestroy()
+        {
+            UnsubscribeEvents();
         }
     }
 }
