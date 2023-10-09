@@ -74,4 +74,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fcc6dc0de3dc4a39a2bc571598509497, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _player: {fileID: 9167275010923571329, guid: d8875d1f8c0c84842a1599a38537b0a8, type: 3}
+  JoystickInput: {fileID: 2033806780255257936, guid: 8c93c206d2e29f74f9e03f0ddbd39d4d, type: 3}
