@@ -37,9 +37,13 @@ namespace _Scripts.Game
             _presetsGame.AddRange(presetsGameModel);
             _containerGameEntity = containerGameEntity;
             _randomService = randomService;
-            
+
+            CurrentFps();
             StartNewGame();
         }
+
+        private void CurrentFps() => 
+            Application.targetFrameRate = 60;
 
         public void CompleteLose() => 
             RestartGame();
