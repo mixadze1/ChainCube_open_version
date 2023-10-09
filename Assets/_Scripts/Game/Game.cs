@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using _Scripts.GameEntities;
 using _Scripts.Generators;
@@ -52,14 +53,14 @@ namespace _Scripts.Game
         private void StartNewGame()
         {
             ScoreRestart();
-            var presetGameModel = RandomPresetGameModel();
-            var presetContainerPosition = RandomPresetContainerGameEntityWithPositions();
+            var presetGameModel = RandomPresetGameModel(_presetsGame);
+            var presetContainerPosition = RandomPresetContainerGameEntityWithPositions(_containerGameEntity);
             GenerateEntity(presetGameModel, presetContainerPosition);
             GenerateMainEntity();
         }
 
         private void ScoreRestart() => 
-            _score.Restart();
+            _score.RestartScore();
 
         private void GenerateMainEntity() => 
             _generatorEntity.GenerateMainEntity();
@@ -67,11 +68,11 @@ namespace _Scripts.Game
         private void GenerateEntity(PresetsGameModel presetsGameModel, ContainerGameEntity presetContainerPosition) => 
             _generatorEntity.GenerateEntity(presetsGameModel, presetContainerPosition);
 
-        private PresetsGameModel RandomPresetGameModel() => 
-            _presetsGame[GetRandomValue(0, _presetsGame.Count)];
+        private PresetsGameModel RandomPresetGameModel(ICollection presetsGameModels) => 
+            _presetsGame[GetRandomValue(0, presetsGameModels.Count)];
 
-        private ContainerGameEntity RandomPresetContainerGameEntityWithPositions() => 
-            _containerGameEntity[GetRandomValue(0, _containerGameEntity.Count)];
+        private ContainerGameEntity RandomPresetContainerGameEntityWithPositions(ICollection containerGameEntities) => 
+            _containerGameEntity[GetRandomValue(0, containerGameEntities.Count)];
 
         private int GetRandomValue(int minValue, int maxValue) => 
             _randomService.Next(minValue, maxValue);

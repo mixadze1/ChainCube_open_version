@@ -1,7 +1,4 @@
-﻿using System;
-using UnityEngine;
-
-namespace _Scripts.Services.Input
+﻿namespace _Scripts.Services.Input
 {
     public class JoystickInput : DynamicJoystick, IInputService
     {

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using _Scripts.ProjectInstallers;
 using _Scripts.Services.RandomService;
 
 namespace _Scripts.Services.ClaculatorPowerTwo

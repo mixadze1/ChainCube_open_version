@@ -1,4 +1,4 @@
-namespace _Scripts.Initialize
+namespace _Scripts.Services.Ads
 {
     public interface IAdsService
     {

@@ -1,4 +1,6 @@
 using System;
+using _Scripts.AssetsProvider;
+using _Scripts.Factory;
 using _Scripts.Game;
 using _Scripts.Generators;
 using _Scripts.Handlers;
@@ -11,23 +13,28 @@ namespace _Scripts.GameEntities
     public class GameEntity : MonoBehaviour
     {
          private Rigidbody _rigidbody;
+         private Transform _parentGameEntity;
          private GameEntityView _gameEntityView;
-         
-        private IReclaimerEntity _reclaimerEntity;
 
-        private GameEntityTouchHandler _gameEntityTouchHandler;
+         private IReclaimerEntity _reclaimerEntity;
+
+         private GameEntityTouchHandler _gameEntityTouchHandler;
         private Score _score;
 
         private float _jumpPower = 7;
-        
-        private int _increaseValue = 2; 
-        
+
+        private int _increaseValue = 2;
+
         public Action OnTouchGameObject;
+        private FactoryPoof _factoryPoof;
 
         public int ValueEntity { get; private set; }
-        
-        public void Initialize( IReclaimerEntity reclaimerEntity, GameEntityTouchHandler gameEntityTouchHandler, int valueEntity, ColorHandler colorHandler,  Vector3 position, Score score)
+
+        public void Initialize( IReclaimerEntity reclaimerEntity, GameEntityTouchHandler gameEntityTouchHandler, int valueEntity,
+            ColorHandler colorHandler,  Vector3 position, Score score, FactoryPoof factoryPoof, Transform parentGameEntity)
         {
+            _parentGameEntity = parentGameEntity;
+            _factoryPoof = factoryPoof;
             _reclaimerEntity = reclaimerEntity;
             _score = score;
             _gameEntityTouchHandler = gameEntityTouchHandler;
@@ -35,6 +42,20 @@ namespace _Scripts.GameEntities
             SetPosition(position);
             InitializeDependency();
             InitializeGameEntityView(colorHandler);
+        }
+
+        public void ReclaimEntity()
+        {
+            DisableEntity();
+            OnTouchGameObject?.Invoke();
+            CreatePoof();
+            _reclaimerEntity.ReclaimEntity(this);
+        }
+
+        private void CreatePoof()
+        {
+            var instance = _factoryPoof.CreatePoof(AssetPath.Poof, _parentGameEntity);
+            instance.Initialize(transform.position);
         }
 
         private void InitializeDependency()
@@ -57,7 +78,7 @@ namespace _Scripts.GameEntities
                 OnTouchGameObject?.Invoke();
         }
 
-        public void OnCollisionStay(Collision other)
+        private void OnCollisionStay(Collision other)
         {
             var gameEntity = OnTouchGameEntity(other);
             if (gameEntity && IsSameNumberEntitiesCondition(gameEntity))
@@ -100,13 +121,6 @@ namespace _Scripts.GameEntities
 
         private void UpdateView(int valueEntity) => 
             _gameEntityView.UpdateView(valueEntity);
-
-        public void ReclaimEntity()
-        {
-            DisableEntity();
-            OnTouchGameObject?.Invoke();
-            _reclaimerEntity.ReclaimEntity(this);
-        }
 
         private void DisableEntity() => 
             gameObject.SetActive(false);

@@ -1,8 +1,9 @@
 using System.Threading.Tasks;
+using _Scripts.Initialize;
 using UnityEngine;
 using Zenject;
 
-namespace _Scripts.Initialize
+namespace _Scripts.Services.EventsService
 {
     public class FakeFireBaseService : ILogEventsService
     {
@@ -20,8 +21,5 @@ namespace _Scripts.Initialize
         {
             Debug.Log($"::: MESSAGE ::: {message}");
         }
-        
-        
-        
     }
 }

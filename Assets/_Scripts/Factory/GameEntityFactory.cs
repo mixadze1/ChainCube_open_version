@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace _Scripts.Factory
 {
-    [CreateAssetMenu]
+    [CreateAssetMenu(menuName = "Factory/EntityFactory", fileName = "EntityFactory")]
     public class GameEntityFactory : AssetProvider
     {
         public GameEntity CreateGameEntity(string path, Transform parent)

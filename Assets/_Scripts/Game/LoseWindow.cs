@@ -9,7 +9,6 @@ namespace _Scripts.Game
     public class LoseWindow : MonoBehaviour
     {
         [SerializeField] private RectTransform _container;
-
         [SerializeField] private Button _restart;
         [SerializeField] private Button _restartSecond;
        
@@ -17,13 +16,16 @@ namespace _Scripts.Game
         private IReclaimerEntity _reclaimerEntity;
 
         [Inject]
-        public void Initialize(ILoseHandler loseHandler, IReclaimerEntity reclaimerEntity)
+        private void Initialize(ILoseHandler loseHandler, IReclaimerEntity reclaimerEntity)
         {
             _reclaimerEntity = reclaimerEntity;
             _loseHandler = loseHandler;
             _restart.onClick.AddListener(CompleteLose);
             _restartSecond.onClick.AddListener(CompleteLose);
         }
+
+        public void EnableView() => 
+            _container.gameObject.SetActive(true);
 
         private void CompleteLose()
         {
@@ -32,17 +34,10 @@ namespace _Scripts.Game
             _loseHandler.CompleteLose();
         }
 
-        private void ClearEntities()
-        {
+        private void ClearEntities() => 
             _reclaimerEntity.ClearEntities();
-        }
 
-        private void DisableView()
-        {
+        private void DisableView() => 
             _container.gameObject.SetActive(false);
-        }
-
-        public void EnableView() => 
-            _container.gameObject.SetActive(true);
     }
 }

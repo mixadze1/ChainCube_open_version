@@ -104,9 +104,7 @@ namespace _Scripts.GameEntities
             _inputService.OnExitInput -= OnExitInput;
         }
 
-        private void OnDestroy()
-        {
+        private void OnDestroy() => 
             UnsubscribeEvents();
-        }
     }
 }

@@ -26,7 +26,6 @@ namespace _Scripts.Initialize
             if(IsConditionNextScene())
                 LoadGameScene();
         }
-        
 
         private bool IsConditionNextScene()
         {

@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 using _Scripts.Initialize;
 using UnityEngine;
 
-namespace _Scripts.Ads
+namespace _Scripts.Services.Ads
 {
     public class AdsService : IAdsService
     {

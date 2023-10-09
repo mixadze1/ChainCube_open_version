@@ -1,25 +1,26 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class SaveScore
+namespace _Scripts.Saves
 {
-    private const string BestScore = "bestScore";
-
-    public bool TrySaveBestScore(int score)
+    public class SaveScore
     {
-        var oldScore = GetBestScore();
-        if (score >= oldScore)
+        private const string BestScore = "bestScore";
+
+        public bool TrySaveBestScore(int score)
         {
-            PlayerPrefs.SetInt(BestScore, score);
-            return true;
+            var oldScore = GetBestScore();
+            if (score >= oldScore)
+            {
+                PlayerPrefs.SetInt(BestScore, score);
+                return true;
+            }
+
+            return false;
         }
 
-        return false;
-    }
-
-    public int GetBestScore()
-    {
-        return PlayerPrefs.GetInt(BestScore);
+        public int GetBestScore()
+        {
+            return PlayerPrefs.GetInt(BestScore);
+        }
     }
 }

@@ -1,3 +1,4 @@
+using _Scripts.Saves;
 using TMPro;
 using UnityEngine;
 using Zenject;
@@ -11,7 +12,7 @@ namespace _Scripts.GameEntities
 
         private SaveScore _saveScore;
     
-        private int _valueScore = 0;
+        private int _valueScore;
 
         [Inject]
         public void Initialize(SaveScore saveScore)
@@ -19,7 +20,7 @@ namespace _Scripts.GameEntities
             _saveScore = saveScore;
         }
 
-        public void Restart()
+        public void RestartScore()
         {
             _valueScore = 0;
             UpdateScore(_valueScore);

@@ -21,6 +21,7 @@ namespace _Scripts.Generators
         private readonly ParentMainEntity _parentFromMainEntity;
         private readonly Score _score;
         private readonly CalculatorPowerTwoService _calculatorPowerTwoService;
+        private readonly FactoryPoof _poofFactory;
 
         private readonly IGameHandler _gameHandler;
         private readonly IInputService _inputService;
@@ -30,8 +31,9 @@ namespace _Scripts.Generators
         private GenerateGameEntity(GameEntityFactory factoryGameEntity, GameEntityTouchHandler gameEntityTouchHandler,
             ColorHandler colorHandler, ParentGameEntity parentFromGameEntity, ParentMainEntity parentFromMainEntity,
             Score score,
-            IGameHandler gameHandler, IInputService inputService, CalculatorPowerTwoService calculatorPowerTwoService)
+            IGameHandler gameHandler, IInputService inputService, CalculatorPowerTwoService calculatorPowerTwoService, FactoryPoof poofFactory)
         {
+            _poofFactory = poofFactory;
             _calculatorPowerTwoService = calculatorPowerTwoService;
             _factoryGameEntity = factoryGameEntity;
             _gameEntityTouchHandler = gameEntityTouchHandler;
@@ -53,39 +55,35 @@ namespace _Scripts.Generators
                     Debug.LogError("Not have Position for Spawn! Add positions!");
                     return;
                 }
-                
-                var instance = _factoryGameEntity.CreateGameEntity(AssetPath.GameEntity, _parentFromGameEntity.transform);
-                _allGameEntities.Add(instance);
-                
-                var exponentValue =  GetNumberForPowerOfTwo(entityModel);
-                
+
+                var instance = CreateGameEntity(AssetPath.GameEntity, _parentFromGameEntity.transform);
+                AddGameEntity(instance);
+
+                var exponentValue = GetNumberForPowerOfTwo(entityModel);
+
                 instance.Initialize(this, _gameEntityTouchHandler, exponentValue, _colorHandler,
-                    presetContainerPosition.Positions[i].transform.position, _score);
+                    presetContainerPosition.Positions[i].transform.position, _score, _poofFactory,
+                    _parentFromGameEntity.transform);
                 i++;
             }
         }
 
         public void GenerateMainEntity()
         {
-            var instance =
-                _factoryGameEntity.CreateGameEntity(AssetPath.GameEntityMain, _parentFromMainEntity.transform);
+            var instance = CreateGameEntity(AssetPath.GameEntityMain, _parentFromMainEntity.transform);
+
             instance.Initialize(this, _gameEntityTouchHandler, RandomValueEntityForMain(), _colorHandler,
-                _parentFromMainEntity.transform.position, _score);
-            _allGameEntities.Add(instance);
+                _parentFromMainEntity.transform.position, _score, _poofFactory, _parentFromGameEntity.transform);
+
+            AddGameEntity(instance);
+
             var mainEntity = instance.GetComponent<GameEntityMain>();
             mainEntity.Initialize(instance, _parentFromGameEntity.transform, _inputService, gameHandler: _gameHandler);
         }
 
-        private int GetNumberForPowerOfTwo(GameEntityModel entityModel) => 
-            _calculatorPowerTwoService.GetNumberForPowerOfTwo(entityModel.ValueEntityPowerOfTwo);
-
-        private int RandomValueEntityForMain() => 
-            _calculatorPowerTwoService.RandomValueEntityForMain();
-
-        public void ReclaimEntity(GameEntity gameEntity)
+        private void AddGameEntity(GameEntity instance)
         {
-            _allGameEntities.Remove(gameEntity);
-            Object.Destroy(gameEntity.gameObject);
+            _allGameEntities.Add(instance);
         }
 
         public void ClearEntities()
@@ -96,5 +94,20 @@ namespace _Scripts.Generators
             }
             _allGameEntities.Clear();
         }
+
+        public void ReclaimEntity(GameEntity gameEntity)
+        {
+            _allGameEntities.Remove(gameEntity);
+            Object.Destroy(gameEntity.gameObject);
+        }
+
+        private GameEntity CreateGameEntity(string path, Transform parentGameEntity) => 
+            _factoryGameEntity.CreateGameEntity(path, parentGameEntity);
+
+        private int GetNumberForPowerOfTwo(GameEntityModel entityModel) => 
+            _calculatorPowerTwoService.GetNumberForPowerOfTwo(entityModel.ValueEntityPowerOfTwo);
+
+        private int RandomValueEntityForMain() => 
+            _calculatorPowerTwoService.RandomValueEntityForMain();
     }
 }

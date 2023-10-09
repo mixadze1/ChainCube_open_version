@@ -6,6 +6,7 @@ using _Scripts.Generators;
 using _Scripts.Handlers;
 using _Scripts.Models;
 using _Scripts.ParentsTransform;
+using _Scripts.Saves;
 using _Scripts.Services.ClaculatorPowerTwo;
 using _Scripts.Services.Input;
 using UnityEngine;
@@ -21,12 +22,17 @@ namespace _Scripts.SceneContext
         [SerializeField] private Game.Game _game;
         [SerializeField] private LoseWindow _loseWindow;
         [SerializeField] private Score _score;
-        [SerializeField] private LoseHandler _loseHandler;
-        [SerializeField] private GameEntityFactory _gameEntityFactory;
-        [SerializeField] private ColorHandler _colorHandler;
         [SerializeField] private ParentMainEntity _parentMain;
         [SerializeField] private ParentGameEntity _parentGameEntity;
         [SerializeField] private JoystickInput _joystickInput;
+        
+        [Header("Factory")]
+        [SerializeField] private GameEntityFactory _gameEntityFactory;
+        [SerializeField] private FactoryPoof _factoryPoof;
+        
+        [Header("Handlers")]
+        [SerializeField] private ColorHandler _colorHandler;
+        [SerializeField] private LoseHandler _loseHandler;
 
         public override void InstallBindings()
         {
@@ -44,7 +50,11 @@ namespace _Scripts.SceneContext
             BindGeneratorEntity();
             BindParents();
             BindGeneratorMainGameEntityValue();
+            BindPoofFactory();
         }
+
+        private void BindPoofFactory() => 
+            Container.Bind<FactoryPoof>().FromInstance(_factoryPoof);
 
         private void BindGame() => 
             Container.BindInterfacesTo<Game.Game>().FromInstance(_game);
