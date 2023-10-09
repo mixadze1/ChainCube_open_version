@@ -1013,7 +1013,7 @@ GameObject:
   - component: {fileID: 2899332506524819037}
   - component: {fileID: 1600482143454933948}
   - component: {fileID: 2380969772890785196}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: GameEntity
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1056,7 +1056,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9167275010923571328}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: b3cca2bec861ced48a34edf607f11f8f, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2

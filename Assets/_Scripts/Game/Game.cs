@@ -9,7 +9,7 @@ using Zenject;
 
 namespace _Scripts.Game
 {
-    public class Game : MonoBehaviour
+    public class Game : MonoBehaviour, IGameHandler
     {
         [SerializeField] private Transform _gameEntityContainer;
         [SerializeField] private Transform _positionMainEntity;
@@ -22,6 +22,7 @@ namespace _Scripts.Game
         private PresetsGameModel _presetsGameModel;
         private ColorHandler _colorHandler;
         private GameEntityTouchHandler _gameEntityTouchHandler;
+        private ContainerGameEntity _currentContainerGameEntity;
 
         private IRandomService _randomService;
         private IInputService _inputService;
@@ -40,6 +41,12 @@ namespace _Scripts.Game
             GenerateGame();
         }
 
+        public void OnUsedMainGameEntity()
+        {
+            RandomPresets(_presetsGameModel, out var presetGameModel, out var presetContainerPosition);
+            GenerateMainEntity(presetGameModel, _currentContainerGameEntity);
+        }
+
         private void GenerateGame()
         {
             RandomPresets(_presetsGameModel,out var presetGameModel, out var presetContainerPosition);
@@ -52,7 +59,7 @@ namespace _Scripts.Game
            var instance = _factoryGameEntity.CreateGameEntity(AssetPath.GameEntityMain, _positionMainEntity);
            instance.Initialize(_gameEntityTouchHandler, presetsGameModel.MainEntityModel, _colorHandler, _positionMainEntity.position);
             var mainEntity = instance.GetComponent<GameEntityMain>();
-            mainEntity.Initialize( instance, presetContainerPosition.transform, _inputService);
+            mainEntity.Initialize( instance, _gameEntityContainer, _inputService, gameHandler:this);
         }
 
         private void RandomPresets(PresetsGameModel presetsGameModel, out PresetsGameModel presetGameModel, out ContainerGameEntity  presetContainerPosition)
@@ -61,7 +68,7 @@ namespace _Scripts.Game
             presetGameModel = SetPresetModel(valueModel);
             
             var valuePosition = GetRandomValue(0, _containerGameEntiy.Count);
-             presetContainerPosition = SetPresetPosition(valuePosition);
+             presetContainerPosition = _currentContainerGameEntity = SetPresetPosition(valuePosition);
         }
 
         private void GenerateEntity(PresetsGameModel presetsGameModel, ContainerGameEntity presetContainerPosition)
@@ -83,5 +90,10 @@ namespace _Scripts.Game
 
         private PresetsGameModel SetPresetModel(int value) => 
             _presetsGame[value];
+    }
+
+    public interface IGameHandler
+    {
+        void OnUsedMainGameEntity();
     }
 }

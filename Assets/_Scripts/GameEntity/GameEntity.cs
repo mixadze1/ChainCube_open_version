@@ -10,7 +10,7 @@ namespace _Scripts.GameEntity
         
         private GameEntityTouchHandler _gameEntityTouchHandler;
 
-        public Action OnTouchGameEntity;
+        public Action OnTouchGameObject;
 
         public int ValueEntity { get; private set; }
 
@@ -29,17 +29,37 @@ namespace _Scripts.GameEntity
 
         private void SetPosition(Vector3 position) => 
             transform.position = position;
-    
+
         public void OnCollisionEnter(Collision other)
         {
-            other.transform.TryGetComponent(out GameEntity gameEntity);
+            var gameEntity = OnTouchGameEntity(other);
 
+       
+            
+            if(OnTouchWall(other) || gameEntity)
+                OnTouchGameObject?.Invoke();
+        }
+
+        public void OnCollisionStay(Collision other)
+        {
+            var gameEntity = OnTouchGameEntity(other);
             if (gameEntity && IsSameNumberEntities(gameEntity))
             {
                 IncreaseEntityNumber();
-                OnTouchGameEntity?.Invoke();
                 _gameEntityTouchHandler.FindSameEntity(gameEntity);
             }
+        }
+
+        private static GameEntity OnTouchGameEntity(Collision other)
+        {
+            other.transform.TryGetComponent(out GameEntity gameEntity);
+            return gameEntity;
+        }
+
+        private static bool OnTouchWall(Collision other)
+        {
+            other.transform.TryGetComponent(out Wall wall);
+            return wall;
         }
 
         private void IncreaseEntityNumber()
@@ -53,10 +73,10 @@ namespace _Scripts.GameEntity
             _gameEntityView.UpdateView(valueEntity);
         }
 
-
         public void DestroyEntity()
         {
             DisableEntity();
+            OnTouchGameObject?.Invoke();
             Destroy(gameObject);
         }
 

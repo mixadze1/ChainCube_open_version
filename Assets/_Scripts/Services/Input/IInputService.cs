@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace _Scripts.Services.Input
@@ -6,8 +7,8 @@ namespace _Scripts.Services.Input
     {
         float GetHorizontal();
 
-        float GetVertical();
+        public event Action OnEnterInput;
 
-        Vector2 GetDirection();
+        public event Action OnExitInput;
     }
 }
