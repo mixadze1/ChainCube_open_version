@@ -48,8 +48,8 @@ namespace _Scripts.GameEntities
         public void ReclaimEntity()
         {
             DisableEntity();
-            OnTouchGameObject?.Invoke();
             CreatePoof();
+            OnTouchGameObject?.Invoke();
             _reclaimerEntity.ReclaimEntity(this);
         }
 
@@ -94,10 +94,8 @@ namespace _Scripts.GameEntities
         private void JumpEntity() =>
             _rigidbody.velocity = new Vector3(_rigidbody.velocity.x, _jumpPower, _rigidbody.velocity.z);
 
-        private void OnFindSameEntity(GameEntity gameEntity)
-        {
+        private void OnFindSameEntity(GameEntity gameEntity) => 
             _gameEntityTouchHandler.OnFindSameEntity(gameEntity);
-        }
 
         private static GameEntity OnTouchGameEntity(Collision other)
         {

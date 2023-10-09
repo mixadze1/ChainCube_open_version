@@ -19,7 +19,7 @@ namespace _Scripts.Services.EventsService
 
         public void LogEvents(string message)
         {
-            Debug.Log($"::: MESSAGE ::: {message}");
+            Debug.Log($"::: FAKE_FIRE_BASE ::: {message}");
         }
     }
 }

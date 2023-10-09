@@ -40,17 +40,17 @@ namespace _Scripts.SceneContext
             BindInputService();
             BindPresetsModels();
             BindGameEntityFactory();
+            BindPoofFactory();
             BindContainerGameEntityPositions();
             BindColorHandler();
             BindGameEntityTouchHandler();
-            BindScoreView();
-            BindSaveScore();
+            BindScore();
+            BindSavesScore();
             BindLoseHandler();
             BindLoseWindow();
             BindGeneratorEntity();
             BindParents();
-            BindGeneratorMainGameEntityValue();
-            BindPoofFactory();
+            BindCalculatorPowerTwoService();
         }
 
         private void BindPoofFactory() => 
@@ -59,7 +59,7 @@ namespace _Scripts.SceneContext
         private void BindGame() => 
             Container.BindInterfacesTo<Game.Game>().FromInstance(_game);
 
-        private void BindGeneratorMainGameEntityValue() => 
+        private void BindCalculatorPowerTwoService() => 
             Container.Bind<CalculatorPowerTwoService>().AsSingle();
 
         private void BindGeneratorEntity() => 
@@ -71,10 +71,10 @@ namespace _Scripts.SceneContext
         private void BindLoseHandler() =>
             Container.Bind<LoseHandler>().FromInstance(_loseHandler);
 
-        private void BindSaveScore() =>
+        private void BindSavesScore() =>
             Container.Bind<SaveScore>().AsSingle().NonLazy();
 
-        private void BindScoreView() =>
+        private void BindScore() =>
             Container.Bind<Score>().FromInstance(_score);
 
         private void BindGameEntityTouchHandler() =>

@@ -4,6 +4,7 @@ using _Scripts.GameEntities;
 using _Scripts.Generators;
 using _Scripts.Handlers;
 using _Scripts.Models;
+using _Scripts.Services.EventsService;
 using _Scripts.Services.RandomService;
 using UnityEngine;
 using Zenject;
@@ -22,12 +23,14 @@ namespace _Scripts.Game
 
         private IRandomService _randomService;
         private IGeneratorEntity _generatorEntity;
+        private ILogEventsService _logEventsService;
 
         [Inject]
         private void Initialize(List<PresetsGameModel> presetsGameModel, IRandomService randomService,
             List<ContainerGameEntity> containerGameEntity, LoseWindow loseWindow,
-            IGeneratorEntity generatorEntity, Score score)
+            IGeneratorEntity generatorEntity, Score score, ILogEventsService logEventsService)
         {
+            _logEventsService = logEventsService;
             _score = score;
             _generatorEntity = generatorEntity;
             _loseWindow = loseWindow;
@@ -50,8 +53,12 @@ namespace _Scripts.Game
         public void CreateNewGameEntityAfterUsedPrevious() => 
             GenerateMainEntity();
 
+        private void LogEvents(string message) => 
+            _logEventsService.LogEvents(message);
+
         private void StartNewGame()
         {
+            LogEvents("Start_new_game");
             ScoreRestart();
             var presetGameModel = RandomPresetGameModel(_presetsGame);
             var presetContainerPosition = RandomPresetContainerGameEntityWithPositions(_containerGameEntity);
