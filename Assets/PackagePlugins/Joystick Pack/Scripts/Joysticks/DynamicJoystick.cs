@@ -12,6 +12,7 @@ public class DynamicJoystick : Joystick
 
     protected override void Start()
     {
+        
         MoveThreshold = moveThreshold;
         base.Start();
         background.gameObject.SetActive(false);
