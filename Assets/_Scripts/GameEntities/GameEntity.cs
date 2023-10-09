@@ -12,26 +12,27 @@ namespace _Scripts.GameEntities
     [RequireComponent(typeof(Rigidbody))]
     public class GameEntity : MonoBehaviour
     {
-         private Rigidbody _rigidbody;
-         private Transform _parentGameEntity;
-         private GameEntityView _gameEntityView;
-
-         private IReclaimerEntity _reclaimerEntity;
-
-         private GameEntityTouchHandler _gameEntityTouchHandler;
+        private Rigidbody _rigidbody;
+        private Transform _parentGameEntity;
+        private GameEntityView _gameEntityView;
+        private FactoryPoof _factoryPoof;
+        private GameEntityTouchHandler _gameEntityTouchHandler;
         private Score _score;
 
+        private IReclaimerEntity _reclaimerEntity;
+        
         private float _jumpPower = 7;
 
         private int _increaseValue = 2;
 
         public Action OnTouchGameObject;
-        private FactoryPoof _factoryPoof;
 
         public int ValueEntity { get; private set; }
 
-        public void Initialize( IReclaimerEntity reclaimerEntity, GameEntityTouchHandler gameEntityTouchHandler, int valueEntity,
-            ColorHandler colorHandler,  Vector3 position, Score score, FactoryPoof factoryPoof, Transform parentGameEntity)
+        public void Initialize(IReclaimerEntity reclaimerEntity, GameEntityTouchHandler gameEntityTouchHandler,
+            int valueEntity,
+            ColorHandler colorHandler, Vector3 position, Score score, FactoryPoof factoryPoof,
+            Transform parentGameEntity)
         {
             _parentGameEntity = parentGameEntity;
             _factoryPoof = factoryPoof;
@@ -64,17 +65,17 @@ namespace _Scripts.GameEntities
             _gameEntityView = GetComponent<GameEntityView>();
         }
 
-        private void InitializeGameEntityView(ColorHandler colorHandler) => 
+        private void InitializeGameEntityView(ColorHandler colorHandler) =>
             _gameEntityView.Initialize(colorHandler, ValueEntity);
 
-        private void SetPosition(Vector3 position) => 
+        private void SetPosition(Vector3 position) =>
             transform.position = position;
 
         public void OnCollisionEnter(Collision other)
         {
             var gameEntity = OnTouchGameEntity(other);
-            
-            if(OnTouchWall(other) || gameEntity)
+
+            if (OnTouchWall(other) || gameEntity)
                 OnTouchGameObject?.Invoke();
         }
 
@@ -90,7 +91,7 @@ namespace _Scripts.GameEntities
             }
         }
 
-        private void JumpEntity() => 
+        private void JumpEntity() =>
             _rigidbody.velocity = new Vector3(_rigidbody.velocity.x, _jumpPower, _rigidbody.velocity.z);
 
         private void OnFindSameEntity(GameEntity gameEntity)
@@ -116,16 +117,16 @@ namespace _Scripts.GameEntities
             UpdateView(ValueEntity);
         }
 
-        private void UpdateScore() => 
+        private void UpdateScore() =>
             _score.UpdateScore(ValueEntity);
 
-        private void UpdateView(int valueEntity) => 
+        private void UpdateView(int valueEntity) =>
             _gameEntityView.UpdateView(valueEntity);
 
-        private void DisableEntity() => 
+        private void DisableEntity() =>
             gameObject.SetActive(false);
 
-        private bool IsSameNumberEntitiesCondition(GameEntity gameEntity) => 
+        private bool IsSameNumberEntitiesCondition(GameEntity gameEntity) =>
             gameEntity.ValueEntity == ValueEntity && gameObject.activeSelf;
     }
 }

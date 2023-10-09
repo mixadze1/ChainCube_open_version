@@ -26,7 +26,7 @@ namespace _Scripts.ProjectInstallers
             Container.Bind<ILogEventsService>().To<FakeFireBaseService>().AsSingle().NonLazy();
 
         private void BindAdsService() => 
-            Container.Bind<IAdsService>().To<AdsService>().AsSingle().NonLazy();
+            Container.Bind<IAdsService>().To<FakeAdsService>().AsSingle().NonLazy();
 
         private void BindGameSceneLoader() => 
             Container.Bind<GameSceneLoader>().AsSingle();

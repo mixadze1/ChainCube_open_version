@@ -1118,7 +1118,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _lineSprite: {fileID: 1808486799120890989}
-  _trail: {fileID: 322202413164133179}
+  _trail: {fileID: 6583903112333199823}
 --- !u!1 &7816362536661049308
 GameObject:
   m_ObjectHideFlags: 0

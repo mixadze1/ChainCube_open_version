@@ -4,12 +4,12 @@ using UnityEngine;
 
 namespace _Scripts.Services.Ads
 {
-    public class AdsService : IAdsService
+    public class FakeAdsService : IAdsService
     {
         private readonly GameSceneLoader _gameSceneLoader;
         private bool _isConnectedToServer;
         
-        private AdsService(GameSceneLoader gameSceneLoader)
+        private FakeAdsService(GameSceneLoader gameSceneLoader)
         {
             _gameSceneLoader = gameSceneLoader;
             InitializeServiceAds();
@@ -23,8 +23,8 @@ namespace _Scripts.Services.Ads
 
         private async Task InitializeServiceAdsAsync()
         {
-            Debug.Log("InitializeServiceAdsAsync");
             await Task.Delay(250);
+            Debug.Log("InitializeFakeAdsServiceAsync");
             _isConnectedToServer = true;
         }
 
