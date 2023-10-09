@@ -10,17 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bc5207f25d5f453bb9fadacd53558f86, type: 3}
-  m_Name: New Presets Game Model
+  m_Name: Presets 2
   m_EditorClassIdentifier: 
   GameEntityModelCollection:
-  - ValueEntity: 2
-    Id: 
-  - ValueEntity: 2
-    Id: 
-  - ValueEntity: 4
-    Id: 
-  - ValueEntity: 8
-    Id: 
-  MainEntityModel:
-    ValueEntity: 4
-    Id: 
+  - ValueEntityPowerOfTwo: 4
+  - ValueEntityPowerOfTwo: 2
+  - ValueEntityPowerOfTwo: 6
+  - ValueEntityPowerOfTwo: 1
+  - ValueEntityPowerOfTwo: 3
+  - ValueEntityPowerOfTwo: 2

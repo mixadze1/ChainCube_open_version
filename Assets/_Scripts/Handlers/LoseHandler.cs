@@ -1,9 +1,8 @@
-using System;
-using _Scripts.Game;
+using _Scripts.GameEntities;
 using UnityEngine;
 using Zenject;
 
-namespace _Scripts.GameEntity
+namespace _Scripts.Handlers
 {
     public class LoseHandler : MonoBehaviour
     {
@@ -17,7 +16,6 @@ namespace _Scripts.GameEntity
 
         public void OnTriggerEnter(Collider other)
         {
-            Debug.Log("OnTriggerEnter");
             other.TryGetComponent(out GameEntityMain main);
             if (main)
                 return;

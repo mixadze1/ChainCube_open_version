@@ -1,6 +1,7 @@
 using _Scripts.Ads;
 using _Scripts.Initialize;
 using _Scripts.Services.Input;
+using _Scripts.Services.RandomService;
 using Zenject;
 
 namespace _Scripts.ProjectInstallers

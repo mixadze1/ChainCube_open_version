@@ -1,4 +1,4 @@
-namespace _Scripts.Game
+namespace _Scripts.Handlers
 {
     public interface ILoseHandler
     {

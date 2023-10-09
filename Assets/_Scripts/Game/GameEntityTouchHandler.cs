@@ -1,8 +1,10 @@
-﻿namespace _Scripts.Game
+﻿using _Scripts.GameEntities;
+
+namespace _Scripts.Game
 {
     public class GameEntityTouchHandler
     {
-        public void OnFindSameEntity(GameEntity.GameEntity gameEntity)
+        public void OnFindSameEntity(GameEntity gameEntity)
         {
             gameEntity.ReclaimEntity();
         }

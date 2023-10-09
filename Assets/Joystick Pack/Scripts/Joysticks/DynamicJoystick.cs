@@ -3,8 +3,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class DynamicJoystick : Joystick
-{   
-    public event Action OnEnterInput;
+{
     public event Action OnExitInput;
 
     public float MoveThreshold { get { return moveThreshold; } set { moveThreshold = Mathf.Abs(value); } }
@@ -22,7 +21,6 @@ public class DynamicJoystick : Joystick
     {
         background.anchoredPosition = ScreenPointToAnchoredPosition(eventData.position);
         background.gameObject.SetActive(true);
-        OnEnterInput?.Invoke();
         base.OnPointerDown(eventData);
     }
 

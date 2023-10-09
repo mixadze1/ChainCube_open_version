@@ -7,8 +7,6 @@ namespace _Scripts.Services.Input
     {
         float GetHorizontal();
 
-        public event Action OnEnterInput;
-
         public event Action OnExitInput;
     }
 }

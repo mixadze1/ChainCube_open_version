@@ -1,8 +1,9 @@
 using System.Collections.Generic;
-using _Scripts.Factory;
-using _Scripts.GameEntity;
-using _Scripts.ProjectInstallers;
-using _Scripts.Services.Input;
+using _Scripts.GameEntities;
+using _Scripts.Generators;
+using _Scripts.Handlers;
+using _Scripts.Models;
+using _Scripts.Services.RandomService;
 using UnityEngine;
 using Zenject;
 
@@ -10,121 +11,69 @@ namespace _Scripts.Game
 {
     public class Game : MonoBehaviour, IGameHandler, ILoseHandler
     {
-        [SerializeField] private Transform _gameEntityContainer;
-        [SerializeField] private Transform _positionMainEntity;
-        
         private List<PresetsGameModel> _presetsGame = new();
 
-        private List<ContainerGameEntity> _containerGameEntiy;
+        private List<ContainerGameEntity> _containerGameEntity;
 
-        private List<GameEntity.GameEntity> _allGameEntities = new();
-        
-        private GameEntityFactory _factoryGameEntity;
         private PresetsGameModel _presetsGameModel;
-        private ColorHandler _colorHandler;
-        private GameEntityTouchHandler _gameEntityTouchHandler;
+        private LoseWindow _loseWindow;
         private Score _score;
 
         private IRandomService _randomService;
-        private IInputService _inputService;
-        private LoseWindow _loseWindow;
+        private IGeneratorEntity _generatorEntity;
 
         [Inject]
-        private void Initialize(List<PresetsGameModel> presetsGameModel, ColorHandler colorHandler, IRandomService randomService,
-            GameEntityFactory factoryGameEntity, List<ContainerGameEntity> containerGameEntity, GameEntityTouchHandler 
-                gameEntityTouchHandler, IInputService inputService, Score score, LoseWindow loseWindow)
+        private void Initialize(List<PresetsGameModel> presetsGameModel, IRandomService randomService,
+            List<ContainerGameEntity> containerGameEntity, LoseWindow loseWindow,
+            IGeneratorEntity generatorEntity, Score score)
         {
-            _loseWindow = loseWindow;
             _score = score;
-            _inputService = inputService;
-            _gameEntityTouchHandler = gameEntityTouchHandler;
+            _generatorEntity = generatorEntity;
+            _loseWindow = loseWindow;
             _presetsGame.AddRange(presetsGameModel);
-            _colorHandler = colorHandler;
-            _containerGameEntiy = containerGameEntity;
+            _containerGameEntity = containerGameEntity;
             _randomService = randomService;
-            _factoryGameEntity = factoryGameEntity;
-            GenerateGame();
+            
+            StartNewGame();
         }
 
         public void CompleteLose() => 
             RestartGame();
 
-        public void RestartGame()
-        {
-            foreach (var entity in _allGameEntities)
-            {
-                Destroy(entity.gameObject);
-            }
-            _allGameEntities.Clear();
-            
-            GenerateGame();
-        }
-        
+        private void RestartGame() => 
+            StartNewGame();
+
         public void ActivateLoseWindow() => 
             _loseWindow.EnableView();
 
         public void CreateNewGameEntityAfterUsedPrevious() => 
             GenerateMainEntity();
 
-        private void GenerateGame()
+        private void StartNewGame()
         {
-            RandomPresets(_presetsGameModel,out var presetGameModel, out var presetContainerPosition);
+            ScoreRestart();
+            var presetGameModel = RandomPresetGameModel();
+            var presetContainerPosition = RandomPresetContainerGameEntityWithPositions();
             GenerateEntity(presetGameModel, presetContainerPosition);
             GenerateMainEntity();
         }
 
-        private void GenerateMainEntity()
-        {
-            var instance = _factoryGameEntity.CreateGameEntity(AssetPath.GameEntityMain, _positionMainEntity);
-            instance.Initialize(this, _gameEntityTouchHandler, RandomValueEntityForMain(), _colorHandler,
-                _positionMainEntity.position, _score);
-            _allGameEntities.Add(instance);
-            var mainEntity = instance.GetComponent<GameEntityMain>();
-            mainEntity.Initialize(instance, _gameEntityContainer, _inputService, gameHandler: this);
-        }
+        private void ScoreRestart() => 
+            _score.Restart();
 
-        private int RandomValueEntityForMain()
-        {
-            List<int> randomList = new List<int> { 2, 4, 8, 16, };
-            var randomValue = _randomService.Next(0, randomList.Count);
-            return randomList[randomValue];
-        }
+        private void GenerateMainEntity() => 
+            _generatorEntity.GenerateMainEntity();
 
-        public void ReclaimGameEntity(GameEntity.GameEntity gameEntity)
-        {
-            _allGameEntities.Remove(gameEntity);
-            Destroy(gameEntity.gameObject);
-        }
+        private void GenerateEntity(PresetsGameModel presetsGameModel, ContainerGameEntity presetContainerPosition) => 
+            _generatorEntity.GenerateEntity(presetsGameModel, presetContainerPosition);
 
-        private void RandomPresets(PresetsGameModel presetsGameModel, out PresetsGameModel presetGameModel, out ContainerGameEntity  presetContainerPosition)
-        {
-            var valueModel  = GetRandomValue(0, _presetsGame.Count);
-            presetGameModel = SetPresetModel(valueModel);
-            
-            var valuePosition = GetRandomValue(0, _containerGameEntiy.Count);
-             presetContainerPosition = SetPresetPosition(valuePosition);
-        }
+        private PresetsGameModel RandomPresetGameModel() => 
+            _presetsGame[GetRandomValue(0, _presetsGame.Count)];
 
-        private void GenerateEntity(PresetsGameModel presetsGameModel, ContainerGameEntity presetContainerPosition)
-        {
-            var i = 0;
-            foreach (var entityModel in presetsGameModel.GameEntityModelCollection)
-            {
-               var instance =  _factoryGameEntity.CreateGameEntity(AssetPath.GameEntity, _gameEntityContainer);
-               _allGameEntities.Add(instance);
-               instance.Initialize(this, _gameEntityTouchHandler, entityModel.ValueEntity, _colorHandler,
-                   presetContainerPosition.Positions[i].transform.position, _score);
-               i++;
-            }
-        }
+        private ContainerGameEntity RandomPresetContainerGameEntityWithPositions() => 
+            _containerGameEntity[GetRandomValue(0, _containerGameEntity.Count)];
 
         private int GetRandomValue(int minValue, int maxValue) => 
             _randomService.Next(minValue, maxValue);
-
-        private ContainerGameEntity SetPresetPosition(int valuePosition) => 
-            _containerGameEntiy[valuePosition];
-
-        private PresetsGameModel SetPresetModel(int value) => 
-            _presetsGame[value];
     }
 }

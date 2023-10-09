@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace _Scripts.ProjectInstallers
+namespace _Scripts.Services.RandomService
 {
     public class RandomService : IRandomService
     {

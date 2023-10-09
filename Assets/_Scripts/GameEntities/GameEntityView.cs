@@ -1,8 +1,9 @@
 using System.Collections.Generic;
+using _Scripts.Handlers;
 using TMPro;
 using UnityEngine;
 
-namespace _Scripts.GameEntity
+namespace _Scripts.GameEntities
 {
     public class GameEntityView : MonoBehaviour
     {

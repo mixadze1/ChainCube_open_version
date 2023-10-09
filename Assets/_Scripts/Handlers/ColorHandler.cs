@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace _Scripts.GameEntity
+namespace _Scripts.Handlers
 {
     [CreateAssetMenu]
     public class ColorHandler : ScriptableObject

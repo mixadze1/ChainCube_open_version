@@ -1,39 +1,50 @@
 using System;
 using _Scripts.Game;
+using _Scripts.Generators;
+using _Scripts.Handlers;
 using UnityEngine;
 
-namespace _Scripts.GameEntity
+namespace _Scripts.GameEntities
 {
+    [RequireComponent(typeof(GameEntityView))]
+    [RequireComponent(typeof(Rigidbody))]
     public class GameEntity : MonoBehaviour
     {
-        [SerializeField] private Rigidbody _rigidbody;
-        [SerializeField] private GameEntityView _gameEntityView;
+         private Rigidbody _rigidbody;
+         private GameEntityView _gameEntityView;
+         
+        private IReclaimerEntity _reclaimerEntity;
 
-        private float _jumpPower = 7;
-
-        private IGameHandler _gameHandler;
-        
         private GameEntityTouchHandler _gameEntityTouchHandler;
         private Score _score;
 
+        private float _jumpPower = 7;
+        
+        private int _increaseValue = 2; 
+        
         public Action OnTouchGameObject;
 
         public int ValueEntity { get; private set; }
-
-        public void Initialize(IGameHandler gameHandler, GameEntityTouchHandler gameEntityTouchHandler, int valueEntity, ColorHandler colorHandler,  Vector3 position, Score score)
+        
+        public void Initialize( IReclaimerEntity reclaimerEntity, GameEntityTouchHandler gameEntityTouchHandler, int valueEntity, ColorHandler colorHandler,  Vector3 position, Score score)
         {
-            _gameHandler = gameHandler;
+            _reclaimerEntity = reclaimerEntity;
             _score = score;
             _gameEntityTouchHandler = gameEntityTouchHandler;
             ValueEntity = valueEntity;
             SetPosition(position);
+            InitializeDependency();
             InitializeGameEntityView(colorHandler);
         }
 
-        private void InitializeGameEntityView(ColorHandler colorHandler)
+        private void InitializeDependency()
         {
-            _gameEntityView.Initialize(colorHandler, ValueEntity);
+            _rigidbody = GetComponent<Rigidbody>();
+            _gameEntityView = GetComponent<GameEntityView>();
         }
+
+        private void InitializeGameEntityView(ColorHandler colorHandler) => 
+            _gameEntityView.Initialize(colorHandler, ValueEntity);
 
         private void SetPosition(Vector3 position) => 
             transform.position = position;
@@ -49,7 +60,7 @@ namespace _Scripts.GameEntity
         public void OnCollisionStay(Collision other)
         {
             var gameEntity = OnTouchGameEntity(other);
-            if (gameEntity && IsSameNumberEntities(gameEntity))
+            if (gameEntity && IsSameNumberEntitiesCondition(gameEntity))
             {
                 IncreaseEntityNumber();
                 UpdateScore();
@@ -58,11 +69,8 @@ namespace _Scripts.GameEntity
             }
         }
 
-        private void JumpEntity()
-        {
-            Debug.Log("Jump");
+        private void JumpEntity() => 
             _rigidbody.velocity = new Vector3(_rigidbody.velocity.x, _jumpPower, _rigidbody.velocity.z);
-        }
 
         private void OnFindSameEntity(GameEntity gameEntity)
         {
@@ -83,35 +91,27 @@ namespace _Scripts.GameEntity
 
         private void IncreaseEntityNumber()
         {
-            ValueEntity *= 2;
+            ValueEntity *= _increaseValue;
             UpdateView(ValueEntity);
         }
 
-        private void UpdateScore()
-        {
+        private void UpdateScore() => 
             _score.UpdateScore(ValueEntity);
-        }
 
-        private void UpdateView(int valueEntity)
-        {
+        private void UpdateView(int valueEntity) => 
             _gameEntityView.UpdateView(valueEntity);
-        }
 
         public void ReclaimEntity()
         {
             DisableEntity();
             OnTouchGameObject?.Invoke();
-            _gameHandler.ReclaimGameEntity(this);
+            _reclaimerEntity.ReclaimEntity(this);
         }
 
-        private void DisableEntity()
-        {
+        private void DisableEntity() => 
             gameObject.SetActive(false);
-        }
 
-        private bool IsSameNumberEntities(GameEntity gameEntity)
-        {
-            return gameEntity.ValueEntity == ValueEntity && gameObject.activeSelf;
-        }
+        private bool IsSameNumberEntitiesCondition(GameEntity gameEntity) => 
+            gameEntity.ValueEntity == ValueEntity && gameObject.activeSelf;
     }
 }

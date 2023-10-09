@@ -1,5 +1,6 @@
 using UnityEngine;
-namespace _Scripts.Factory
+
+namespace _Scripts.AssetsProvider
 {
     public class AssetProvider : ScriptableObject
     {

@@ -2,24 +2,27 @@
 using _Scripts.Services.Input;
 using UnityEngine;
 
-namespace _Scripts.GameEntity
+namespace _Scripts.GameEntities
 {
+    [RequireComponent(typeof(GameEntity))]
     public class GameEntityMain : MonoBehaviour
     {
-        [SerializeField] private SpriteRenderer _sprite;
+        [SerializeField] private SpriteRenderer _lineSprite;
         [SerializeField] private Transform _trail;
-        [SerializeField] private Rigidbody _rigidbody;
-        
+
+        private const string GameObjectNameAfterUse = "GameEntity";
+
         private IGameHandler _gameHandler;
         private IInputService _inputService;
 
+        private Rigidbody _rigidbody;
         private GameEntity _gameEntity;
         private Transform _parentGameEntity;
 
         private float _speed = 5;
-
-        private bool _isExitInput;
         private float _speedToEntities = 25;
+        
+        private bool _isExitInput;
 
         public void Initialize(GameEntity gameEntity, Transform parentGameEntity, IInputService inputService, IGameHandler gameHandler)
         {
@@ -29,17 +32,23 @@ namespace _Scripts.GameEntity
             _parentGameEntity = parentGameEntity;
             gameEntity.OnTouchGameObject += OnTouchGameEntity;
             inputService.OnExitInput += OnExitInput;
-            
+
+            InitializeDependency();
             FreezeRotationState(true);
         }
+
+        private void InitializeDependency() => 
+            _rigidbody = GetComponent<Rigidbody>();
 
         private void OnExitInput()
         {
             _isExitInput = true;
-            _sprite.gameObject.SetActive(false);
+            DisableLineSprite();
             MoveToEntities();
-            Debug.Log("OnExitInput");
         }
+
+        private void DisableLineSprite() => 
+            _lineSprite.gameObject.SetActive(false);
 
         private void FreezeRotationState(bool value) => 
             _rigidbody.freezeRotation = value;
@@ -71,6 +80,7 @@ namespace _Scripts.GameEntity
                 return;
 
             SetCurrentParent();
+            RenameGameObject();
             FreezeRotationState(false);
             UnsubscribeEvents();
             CreateNewMainGameEntity();
@@ -78,6 +88,9 @@ namespace _Scripts.GameEntity
             Destroy(this);
             Destroy(_trail.gameObject);
         }
+
+        private void RenameGameObject() => 
+            this.gameObject.name = GameObjectNameAfterUse;
 
         private void SetCurrentParent() => 
             transform.SetParent(_parentGameEntity);

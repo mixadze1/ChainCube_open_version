@@ -1,4 +1,4 @@
-﻿namespace _Scripts.Factory
+﻿namespace _Scripts.AssetsProvider
 {
     public static class AssetPath
     {

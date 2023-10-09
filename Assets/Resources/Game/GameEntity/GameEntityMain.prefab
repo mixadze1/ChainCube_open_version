@@ -1014,10 +1014,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7281537218106093751}
-  - component: {fileID: 1527241890095029045}
   - component: {fileID: 3605690078156965396}
   - component: {fileID: 865691200893053941}
   - component: {fileID: 4269241939255942629}
+  - component: {fileID: 1527241890095029045}
   - component: {fileID: 7301351230515647446}
   m_Layer: 6
   m_Name: GameEntityMain
@@ -1044,20 +1044,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1527241890095029045
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7281537218106093769}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e95273a08e1c948408f14807b055fdba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _rigidbody: {fileID: 865691200893053941}
-  _gameEntityView: {fileID: 4269241939255942629}
 --- !u!65 &3605690078156965396
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1107,6 +1093,20 @@ MonoBehaviour:
   - {fileID: 637299471679232186}
   - {fileID: 4315259165055311967}
   - {fileID: 3680302088794778642}
+--- !u!114 &1527241890095029045
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7281537218106093769}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e95273a08e1c948408f14807b055fdba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _rigidbody: {fileID: 865691200893053941}
+  _gameEntityView: {fileID: 4269241939255942629}
 --- !u!114 &7301351230515647446
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1119,7 +1119,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 241b73e22cc7407484247a45da1060ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _sprite: {fileID: 1808486799120890989}
+  _lineSprite: {fileID: 1808486799120890989}
   _trail: {fileID: 322202413164133179}
   _rigidbody: {fileID: 865691200893053941}
 --- !u!1 &7816362536661049308
@@ -1268,7 +1268,7 @@ GameObject:
   - component: {fileID: 8938710147698117035}
   - component: {fileID: 1808486799120890989}
   m_Layer: 0
-  m_Name: sprite
+  m_Name: LineSprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

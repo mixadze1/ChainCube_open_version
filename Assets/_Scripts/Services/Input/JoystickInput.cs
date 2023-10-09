@@ -7,8 +7,5 @@ namespace _Scripts.Services.Input
     {
         public float GetHorizontal() => 
              Horizontal;
-        
-        private bool IsActiveJoystick() => 
-            !isActiveAndEnabled;
     }
 }
