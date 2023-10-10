@@ -36,6 +36,7 @@ namespace _Scripts.SceneContext
 
         public override void InstallBindings()
         {
+            BindFpsHandler();
             BindGame();
             BindInputService();
             BindPresetsModels();
@@ -52,6 +53,9 @@ namespace _Scripts.SceneContext
             BindParents();
             BindCalculatorPowerTwoService();
         }
+
+        private void BindFpsHandler() => 
+            Container.Bind<FpsHandler>().AsSingle().NonLazy();
 
         private void BindPoofFactory() => 
             Container.Bind<FactoryPoof>().FromInstance(_factoryPoof);

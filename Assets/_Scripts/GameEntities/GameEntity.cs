@@ -84,8 +84,9 @@ namespace _Scripts.GameEntities
             var gameEntity = OnTouchGameEntity(other);
             if (gameEntity && IsSameNumberEntitiesCondition(gameEntity))
             {
-                IncreaseEntityNumber();
-                UpdateScore();
+                var value = IncreaseEntityNumber();
+                UpdateView(value);
+                UpdateScore(value);
                 JumpEntity();
                 OnFindSameEntity(gameEntity);
             }
@@ -109,14 +110,11 @@ namespace _Scripts.GameEntities
             return wall;
         }
 
-        private void IncreaseEntityNumber()
-        {
+        private int IncreaseEntityNumber() => 
             ValueEntity *= _increaseValue;
-            UpdateView(ValueEntity);
-        }
 
-        private void UpdateScore() =>
-            _score.UpdateScore(ValueEntity);
+        private void UpdateScore(int value) =>
+            _score.UpdateScore(value);
 
         private void UpdateView(int valueEntity) =>
             _gameEntityView.UpdateView(valueEntity);
@@ -125,6 +123,6 @@ namespace _Scripts.GameEntities
             gameObject.SetActive(false);
 
         private bool IsSameNumberEntitiesCondition(GameEntity gameEntity) =>
-            gameEntity.ValueEntity == ValueEntity && gameObject.activeSelf;
+            gameEntity.ValueEntity == ValueEntity;
     }
 }

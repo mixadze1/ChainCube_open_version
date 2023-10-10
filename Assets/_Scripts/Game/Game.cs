@@ -13,9 +13,8 @@ namespace _Scripts.Game
 {
     public class Game : MonoBehaviour, IGameHandler, ILoseHandler
     {
-        private List<PresetsGameModel> _presetsGame = new();
-
-        private List<ContainerGameEntity> _containerGameEntity;
+        private readonly List<PresetsGameModel> _presetsGame = new();
+        private readonly List<ContainerGameEntity> _containerGameEntity = new();
 
         private PresetsGameModel _presetsGameModel;
         private LoseWindow _loseWindow;
@@ -34,17 +33,13 @@ namespace _Scripts.Game
             _score = score;
             _generatorEntity = generatorEntity;
             _loseWindow = loseWindow;
-            _presetsGame.AddRange(presetsGameModel);
-            _containerGameEntity = containerGameEntity;
             _randomService = randomService;
+            _presetsGame.AddRange(presetsGameModel); 
+            _containerGameEntity.AddRange(containerGameEntity);
 
-            CurrentFps();
             StartNewGame();
         }
-
-        private void CurrentFps() => 
-            Application.targetFrameRate = 60;
-
+        
         public void CompleteLose() => 
             RestartGame();
 
