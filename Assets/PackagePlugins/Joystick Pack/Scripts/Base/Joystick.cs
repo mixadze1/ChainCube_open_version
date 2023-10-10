@@ -55,8 +55,8 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
         handle.anchorMax = center;
         handle.pivot = center;
         handle.anchoredPosition = Vector2.zero;
-        baseRect.sizeDelta = new Vector2(Screen.width, 1080);
-        baseRect.anchoredPosition = new Vector2(Screen.width / 2, 0);
+        baseRect.sizeDelta = new Vector2(Screen.width, Screen.height);
+        baseRect.anchoredPosition = new Vector2(Screen.width / 2, Screen.height/2r);
     }
 
     public virtual void OnPointerDown(PointerEventData eventData)
